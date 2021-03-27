@@ -91,7 +91,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                             IconButton(
                               icon: Image.asset(
                                 chatImage,
-                                color: Colors.blue,
+                                color: Colors.white,
                                 height: 17.0,
                               ),
                               onPressed: () {

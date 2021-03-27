@@ -81,21 +81,27 @@ class _SettingsState extends State<Settings> {
                   children: [
                     Stack(
                       children: [
-                        Image(
-                          image: AssetImage(image),
-                          height: height * 0.08,
+                        CircleAvatar(
+                          radius: 35,
+                          child: Image(
+                            image: AssetImage(image),
+                          ),
                         ),
                         Positioned(
                           bottom: 0,
-                          top: height*0.044,
-                          left: 21,
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.camera_alt,
-                              size: 18.0,
-                              color: Colors.blue[700],
+                          top: height * 0.05,
+                          right: 0,
+                          child: InkWell(
+                            onTap: () {
+                              print("change the image");
+                            },
+                            child: CircleAvatar(
+                              radius: 12,
+                              child: Icon(
+                                Icons.linked_camera_rounded,
+                                size: 15,
+                              ),
                             ),
-                            onPressed: () {},
                           ),
                         ),
                       ],

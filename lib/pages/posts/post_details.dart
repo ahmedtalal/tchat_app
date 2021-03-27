@@ -74,9 +74,9 @@ class _PostDetailsState extends State<PostDetails> {
                     decoration: InputDecoration(
                       labelText: "content",
                       labelStyle: TextStyle(
-                        fontSize: 18.0,
+                        fontSize: 20.0,
                         color: Colors.black,
-                        decoration: TextDecoration.underline,
+                        fontWeight: FontWeight.bold,
                       ),
                       filled: true,
                       fillColor: Colors.lightBlue[100],

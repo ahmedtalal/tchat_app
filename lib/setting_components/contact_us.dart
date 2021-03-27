@@ -51,7 +51,7 @@ class ContactUs extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                height: height * 0.05,
+                height: height * 0.03,
               ),
               // facebook card ???????????????????????
               Expanded(
@@ -78,9 +78,6 @@ class ContactUs extends StatelessWidget {
                         },
                       ),
                     ),
-                    SizedBox(
-                      height: height * 0.03,
-                    ),
                     // instgram card ??????????????????????
                     Card(
                       child: ListTile(
@@ -103,9 +100,6 @@ class ContactUs extends StatelessWidget {
                         },
                       ),
                     ),
-                    SizedBox(
-                      height: height * 0.03,
-                    ),
                     Card(
                       child: ListTile(
                         title: Text(
@@ -126,9 +120,6 @@ class ContactUs extends StatelessWidget {
                           _launchUrl(url);
                         },
                       ),
-                    ),
-                    SizedBox(
-                      height: height * 0.03,
                     ),
                     Card(
                       child: ListTile(
@@ -151,9 +142,6 @@ class ContactUs extends StatelessWidget {
                         },
                       ),
                     ),
-                    SizedBox(
-                      height: height * 0.03,
-                    ),
                     Card(
                       child: ListTile(
                         title: Text(
@@ -174,9 +162,6 @@ class ContactUs extends StatelessWidget {
                           _launchUrl(url);
                         },
                       ),
-                    ),
-                    SizedBox(
-                      height: height * 0.03,
                     ),
                   ],
                 ),

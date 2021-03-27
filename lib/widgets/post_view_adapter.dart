@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:share/share.dart';
 import 'package:tchat/constants.dart';
 import 'package:tchat/firebase/auth/auth_crud_services.dart';
 import 'package:tchat/firebase/chat/follow_crud_Services.dart';
@@ -272,7 +273,9 @@ class PostViewApdater extends StatelessWidget {
                             color: Colors.grey[500],
                             height: 20.0,
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            _shareApp(context);
+                          },
                         ),
                         Text(
                           "Share",
@@ -387,5 +390,12 @@ class PostViewApdater extends StatelessWidget {
     } else {
       print("error in operation");
     }
+  }
+
+  // this method is used to share app with your friends
+  void _shareApp(BuildContext context) {
+    final RenderBox box = context.findRenderObject();
+    final String title = postModel.content;
+    Share.share("this content from tchat app >>> : $title", sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 }

@@ -76,7 +76,7 @@ class _ChatRoomState extends State<ChatRoom> {
                               ),
                             ),
                             SizedBox(
-                              height: 6,
+                              height: 3,
                             ),
                             Text(
                               "Online",
