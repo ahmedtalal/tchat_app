@@ -5,6 +5,7 @@ import 'package:tchat/firebase/auth/auth_crud_services.dart';
 import 'package:tchat/firebase/chat/post_crud_servies.dart';
 import 'package:tchat/models/post_model.dart';
 import 'package:tchat/pages/posts/add_post.dart';
+import 'package:tchat/pages/search_page.dart';
 import 'package:tchat/widgets/post_view_adapter.dart';
 import 'package:tchat/widgets/search_widget.dart';
 
@@ -27,48 +28,57 @@ class _PostsState extends State<Posts> {
               left: width * 0.03,
               right: width * 0.03,
             ),
-            child: Column(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        StreamBuilder(
-                          stream: AuthCrudServices.getInstance()
-                              .getSpecificData(
-                                  AuthCrudServices.getInstance().getUser().uid),
-                          builder: (context, snapshot) {
-                            String image;
-                            var document = snapshot.data;
-                            if (!snapshot.hasData ||
-                                document["image"] == "null") {
-                              image = userImage;
-                            } else {
-                              print("object");
-                              image = document["image"];
-                            }
-                            return CircleAvatar(
-                              radius: 15.0,
-                              child: Image(
-                                image: AssetImage(image),
-                              ),
-                            );
-                          },
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 12.0),
-                          child: Text(
-                            "Posts",
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              fontFamily: YuseiMagic,
-                              fontWeight: FontWeight.bold,
-                            ),
+                    StreamBuilder(
+                      stream: AuthCrudServices.getInstance().getSpecificData(
+                          AuthCrudServices.getInstance().getUser().uid),
+                      builder: (context, snapshot) {
+                        String image;
+                        var document = snapshot.data;
+                        if (!snapshot.hasData || document["image"] == "null") {
+                          image = userImage;
+                        } else {
+                          print("object");
+                          image = document["image"];
+                        }
+                        return CircleAvatar(
+                          radius: 15.0,
+                          child: Image(
+                            image: AssetImage(image),
                           ),
-                        ),
-                      ],
+                        );
+                      },
                     ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 12.0),
+                      child: Text(
+                        "Posts",
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontFamily: YuseiMagic,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    InkWell(
+                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => SearchPage(type: "posts"),
+                      )),
+                      child: Icon(
+                        Icons.search,
+                        size: 22.0,
+                        color: Colors.blue,
+                      ),
+                    ),
+                    const SizedBox(width: 10.0),
                     InkWell(
                       onTap: () => Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => AddPost(),
@@ -80,16 +90,6 @@ class _PostsState extends State<Posts> {
                       ),
                     ),
                   ],
-                ),
-                SizedBox(
-                  height: height * 0.02,
-                ),
-                SearchWidget(
-                  onClick: (value) {
-                    setState(() {});
-                  },
-                  heightValue: height * 0.066,
-                  hint: "Search",
                 ),
               ],
             ),
@@ -105,7 +105,7 @@ class _PostsState extends State<Posts> {
                   return noPostsWidget("error");
                 }
                 List<PostModel> posts = [];
-                snapshot.data.docs.forEach((QueryDocumentSnapshot element) {
+                snapshot.data.docs.forEach((DocumentSnapshot element) {
                   PostModel postModel = PostModel.fromMap(element.data());
                   posts.add(postModel);
                 });

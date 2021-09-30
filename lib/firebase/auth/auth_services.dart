@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tchat/firebase/auth/auth_crud_services.dart';
 import 'package:tchat/models/user_model.dart';
+
 class AuthServices {
   static AuthServices _authServics;
   FirebaseAuth _auth = FirebaseAuth.instance;
@@ -13,18 +14,18 @@ class AuthServices {
     return _authServics;
   }
 
-  Future<bool> register(UserModel user) async {
+  register(UserModel user) async {
     UserCredential credential = await _auth.createUserWithEmailAndPassword(
         email: user.email, password: user.password);
     if (credential != null) {
       String id = FirebaseAuth.instance.currentUser.uid;
-    UserModel userModel = UserModel.all(id, user.name, user.email, "null");
+      UserModel userModel = UserModel.all(id, user.name, user.email, "null");
       return await AuthCrudServices.getInstance().addData(userModel);
     }
     return false;
   }
 
-  Future<bool> login(UserModel model) async {
+  login(UserModel model) async {
     UserCredential credential = await _auth.signInWithEmailAndPassword(
         email: model.email, password: model.password);
     if (credential != null) {

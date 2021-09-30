@@ -60,7 +60,7 @@ class _AddPostState extends State<AddPost> {
               SearchWidget(
                 onClick: (value) {
                   setState(() {
-                    message = value ;
+                    message = value;
                   });
                 },
                 heightValue: height * 0.2,
@@ -75,7 +75,7 @@ class _AddPostState extends State<AddPost> {
                 width: width * 0.85,
                 onClick: () {
                   setState(() {
-                    isProgress = !isProgress ;
+                    isProgress = !isProgress;
                   });
                   _validPost(context);
                 },
@@ -87,10 +87,10 @@ class _AddPostState extends State<AddPost> {
     );
   }
 
-  void _validPost(BuildContext context) async{
-    if(message.isEmpty){
+  void _validPost(BuildContext context) async {
+    if (message.isEmpty) {
       creareSnackbar("you must write your content!");
-    }else {
+    } else {
       var uid = Uuid();
       String postId = uid.v1();
       String userId = FirebaseAuth.instance.currentUser.uid;
@@ -98,12 +98,13 @@ class _AddPostState extends State<AddPost> {
       String date = DateFormat.yMd().add_jm().format(now);
       List<String> isLike = [];
       List<String> isFollow = [];
-      PostModel post = PostModel(postId, message, userId, 0, isLike, isFollow, date);
+      PostModel post =
+          PostModel(postId, message, userId, 0, isLike, isFollow, date);
       try {
         var result = await PostCrudServices.getInstance().addData(post);
-        if(result == true){
+        if (result == true) {
           Navigator.of(context).pop(context);
-        }else {
+        } else {
           creareSnackbar("error in adding process");
         }
       } catch (e) {
@@ -111,10 +112,11 @@ class _AddPostState extends State<AddPost> {
       }
     }
   }
+
   void creareSnackbar(String message) {
     setState(() {
       isProgress = !isProgress;
-      scafolldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(message),
         ),

@@ -6,6 +6,7 @@ const String image1 = "assets/images/chating.png";
 const String image2 = "assets/images/posts.png";
 const String image3 = "assets/images/following.png";
 const String image4 = "assets/images/story.png";
+const String users = "assets/images/users.png";
 const String title1 = "Chat with your friends";
 const String title2 = "Add your posts";
 const String title3 = "Follow anyone";
@@ -15,10 +16,11 @@ const String description1 =
 const String description2 =
     "You can add any post and share it with your friends";
 const String description3 = "you can send any friend request to anyone";
-const String description4 = "you can upload your story and share it with your friends";
+const String description4 =
+    "you can upload your story and share it with your friends";
 const String loginLogo = "assets/images/register.png";
-const String registerLogo = "assets/images/login.png" ;
-const String noWifi = "assets/images/wifioff.jpg" ;
+const String registerLogo = "assets/images/login.png";
+const String noWifi = "assets/images/wifioff.jpg";
 const String userImage = "assets/images/user.png";
 const String chatImage = "assets/images/chats.png";
 const String postImage = "assets/images/post.png";
@@ -30,3 +32,22 @@ const String followImage = "assets/images/follower.png";
 const String unfollowImage = "assets/images/unfollow.png";
 const String emptySearch = "assets/images/emptysearch.png";
 const String profileBackground = "assets/images/userprofile.jpg";
+const String followMe = "assets/images/followme.png";
+const String unfollowMe = "assets/images/unfollowme.png";
+
+void snackbarValidate(String s, BuildContext context) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(
+        s,
+        style: TextStyle(
+          fontFamily: YuseiMagic,
+          fontSize: 16.0,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+        ),
+      ),
+      backgroundColor: Colors.grey[200],
+    ),
+  );
+}

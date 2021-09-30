@@ -78,19 +78,27 @@ class _PostDetailsState extends State<PostDetails> {
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
                       ),
-                      filled: true,
                       fillColor: Colors.lightBlue[100],
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20.0),
-                        borderSide: BorderSide(color: Colors.white),
+                        borderSide: BorderSide(
+                          color: Colors.grey[400],
+                          width: 0.6,
+                        ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20.0),
-                        borderSide: BorderSide(color: Colors.white),
+                        borderSide: BorderSide(
+                          color: Colors.grey[400],
+                          width: 0.6,
+                        ),
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20.0),
-                        borderSide: BorderSide(color: Colors.white),
+                        borderSide: BorderSide(
+                          color: Colors.grey[400],
+                          width: 0.6,
+                        ),
                       ),
                     ),
                     validator: (input) {
@@ -144,7 +152,7 @@ class _PostDetailsState extends State<PostDetails> {
     );
   }
 
-  void _updatePost(BuildContext context) {
+  void _updatePost(BuildContext context) async {
     if (formKey.currentState.validate()) {
       PostModel postModel = PostModel(
         widget.postModel.postId,
@@ -155,16 +163,17 @@ class _PostDetailsState extends State<PostDetails> {
         widget.postModel.isLike,
         widget.postModel.date,
       );
-      var result = PostCrudServices.getInstance().updataData(postModel);
+      var result = await PostCrudServices.getInstance().updataData(postModel);
       if (result == true) {
         Navigator.of(context).pop(context);
       }
     }
   }
 
-  void _deletePost(BuildContext context) {
+  void _deletePost(BuildContext context) async {
     if (formKey.currentState.validate()) {
-      var result = PostCrudServices.getInstance().deleteData(widget.postModel.postId);
+      var result = await PostCrudServices.getInstance()
+          .deleteData(widget.postModel.postId);
       if (result == true) {
         Navigator.of(context).pop(context);
       }

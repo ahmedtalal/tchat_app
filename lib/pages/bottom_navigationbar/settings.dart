@@ -19,6 +19,7 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   String image;
   String name;
+  String email;
   String id;
   @override
   Widget build(BuildContext context) {
@@ -71,6 +72,7 @@ class _SettingsState extends State<Settings> {
                 var document = snapShot.data;
                 name = document["name"];
                 id = document["id"];
+                email = document["email"];
                 if (document["image"] == "null") {
                   image = userImage;
                 } else {
@@ -93,7 +95,7 @@ class _SettingsState extends State<Settings> {
                           right: 0,
                           child: InkWell(
                             onTap: () {
-                              print("change the image");
+                              uploadImage();
                             },
                             child: CircleAvatar(
                               radius: 12,
@@ -151,6 +153,7 @@ class _SettingsState extends State<Settings> {
                           userId: id,
                           posts: list,
                           userName: name,
+                          email: email,
                         ),
                       ),
                     );
@@ -243,4 +246,6 @@ class _SettingsState extends State<Settings> {
       ),
     );
   }
+
+  void uploadImage() {}
 }

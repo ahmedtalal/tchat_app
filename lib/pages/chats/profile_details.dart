@@ -1,13 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:tchat/constants.dart';
 import 'package:tchat/firebase/auth/auth_crud_services.dart';
 import 'package:tchat/firebase/chat/follow_crud_Services.dart';
 import 'package:tchat/firebase/chat/follower_crud_Services.dart';
 import 'package:tchat/models/post_model.dart';
-import 'package:tchat/models/user_model.dart';
 import 'package:tchat/pages/chats/chat_room.dart';
+import 'package:tchat/providers/bloc/follow_bloc/follow_Events.dart';
+import 'package:tchat/providers/bloc/follow_bloc/follow_States.dart';
+import 'package:tchat/providers/bloc/follow_bloc/follow_bloc.dart';
 import 'package:tchat/providers/darkmode_provider.dart';
 import 'package:tchat/widgets/post_view_adapter.dart';
 
@@ -26,6 +29,8 @@ class ProfileDetails extends StatefulWidget {
 class _ProfileDetailsState extends State<ProfileDetails> {
   List<PostModel> postList = [];
   String name, image;
+  bool isfollow = false;
+
   @override
   void initState() {
     super.initState();
@@ -39,6 +44,8 @@ class _ProfileDetailsState extends State<ProfileDetails> {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
+    var provider = BlocProvider.of<FollowBloc>(context);
+
     return Scaffold(
       body: SafeArea(
         top: false,
@@ -136,40 +143,120 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                CircleAvatar(
-                                  radius: 19.0,
-                                  child: Image(image: AssetImage(image)),
+                                Row(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 19.0,
+                                      child: Image(image: AssetImage(image)),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 5.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            result == false
+                                                ? "Unknown"
+                                                : docs["email"],
+                                            style: TextStyle(
+                                              fontFamily: YuseiMagic,
+                                              color: Colors.white,
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            result == false ? "Unknown" : name,
+                                            style: TextStyle(
+                                              fontFamily: YuseiMagic,
+                                              color: Colors.white60,
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 5.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        result == false
-                                            ? "Unknown"
-                                            : docs["email"],
-                                        style: TextStyle(
-                                          fontFamily: YuseiMagic,
-                                          color: Colors.white,
-                                          fontSize: 16.0,
-                                          fontWeight: FontWeight.bold,
+                                StreamBuilder(
+                                  stream: FollowCrudServices.getInstance()
+                                      .getSpecificData(widget.userId),
+                                  builder: (context, snapshot) {
+                                    var id = snapshot.data;
+                                    String currentUser =
+                                        AuthCrudServices.getInstance()
+                                            .getUser()
+                                            .uid;
+                                    bool res;
+                                    try {
+                                      res = id["id"] == widget.userId
+                                          ? true
+                                          : false;
+                                    } catch (e) {
+                                      res = false;
+                                    }
+                                    if (snapshot.data == null) {
+                                      isfollow = false;
+                                    } else if (res == true) {
+                                      isfollow = true;
+                                    }
+                                    if (widget.userId == currentUser) {
+                                      return Visibility(
+                                        visible: false,
+                                        child: Text("null"),
+                                      );
+                                    } else {
+                                      return BlocListener<FollowBloc,
+                                          FollowStates>(
+                                        listener: (context, state) {
+                                          if (state is FollowedState) {
+                                            snackbarValidate(
+                                                state.message, context);
+                                          } else if (state is UnFollowedState) {
+                                            snackbarValidate(
+                                                state.message, context);
+                                          } else if (state
+                                              is FollowExceptionState) {
+                                            snackbarValidate(
+                                                state.error, context);
+                                          }
+                                        },
+                                        child: BlocBuilder<FollowBloc,
+                                            FollowStates>(
+                                          builder: (context, state) {
+                                            return IconButton(
+                                              icon: isfollow == true
+                                                  ? Image.asset(unfollowMe)
+                                                  : Image.asset(followMe),
+                                              onPressed: () {
+                                                if (isfollow == true) {
+                                                  // un follow me action
+                                                  setState(() {
+                                                    isfollow = false;
+                                                  });
+                                                  provider.ownerId =
+                                                      widget.userId;
+                                                  provider.add(
+                                                      RemoveFollowEvents());
+                                                } else {
+                                                  // follow me action
+                                                  provider.ownerId =
+                                                      widget.userId;
+                                                  provider
+                                                      .add(AddFollowEvent());
+                                                  isfollow = true;
+                                                }
+                                              },
+                                            );
+                                          },
                                         ),
-                                      ),
-                                      Text(
-                                        result == false
-                                            ? "Unknown"
-                                            : name,
-                                        style: TextStyle(
-                                            fontFamily: YuseiMagic,
-                                            color: Colors.white60,
-                                            fontSize: 12.0,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ],
-                                  ),
+                                      );
+                                    }
+                                  },
                                 ),
                               ],
                             ),
@@ -319,54 +406,6 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                       fontFamily: YuseiMagic,
                       fontWeight: FontWeight.bold,
                     ),
-                  ),
-                  StreamBuilder<QuerySnapshot>(
-                    stream: FollowCrudServices.getInstance().retrieveAllData(
-                        FollowCrudServices.getInstance().getUser().uid),
-                    builder: (context, snapshot) {
-                      bool flag;
-                      if (!snapshot.hasData) {
-                        return Visibility(
-                          visible: false,
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.person_remove,
-                              size: 20.0,
-                            ),
-                            onPressed: () {},
-                          ),
-                        );
-                      }
-                      snapshot.data.docs.forEach((element) {
-                        UserModel userModel = UserModel.fromMap(element.data());
-                        if (userModel.id == widget.userId) {
-                          flag = true;
-                        } else {
-                          flag = false;
-                        }
-                      });
-                      return Visibility(
-                        visible: flag == true ? true : false,
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.person_remove,
-                            size: 25.0,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              var result = FollowCrudServices.getInstance()
-                                  .deleteData(widget.userId);
-                              if (result == true) {
-                                print("true");
-                                Navigator.of(context).pop(context);
-                              } else {
-                                print("false");
-                              }
-                            });
-                          },
-                        ),
-                      );
-                    },
                   ),
                 ],
               ),

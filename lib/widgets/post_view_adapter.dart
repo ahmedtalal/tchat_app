@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share/share.dart';
 import 'package:tchat/constants.dart';
 import 'package:tchat/firebase/auth/auth_crud_services.dart';
@@ -21,7 +22,7 @@ class PostViewApdater extends StatelessWidget {
     @required this.postList,
     @required this.position,
   });
-  String userName, userImageProf;
+  String userName, userImageProf, email;
   bool isfollow = false;
   List<dynamic> likeList = [];
   bool likeResult = false;
@@ -59,7 +60,6 @@ class PostViewApdater extends StatelessWidget {
         },
         child: Container(
           decoration: BoxDecoration(
-            
             border: Border.all(color: Colors.grey, width: 0.33),
             borderRadius: BorderRadius.circular(10.0),
           ),
@@ -68,143 +68,138 @@ class PostViewApdater extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
+                StatefulBuilder(
+                  builder: (context, setState) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        InkWell(
-                          onTap: () {
-                            if (position == 1 &&
-                                postModel.ownerId ==
-                                    PostCrudServices.getInstance()
-                                        .getUser()
-                                        .uid) {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => UserProfile(
-                                    userId: postModel.ownerId,
-                                    posts: postList,
-                                    userName: userName,
-                                  ),
+                        Row(
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                if (position == 1 &&
+                                    postModel.ownerId ==
+                                        PostCrudServices.getInstance()
+                                            .getUser()
+                                            .uid) {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => UserProfile(
+                                        userId: postModel.ownerId,
+                                        posts: postList,
+                                        userName: userName,
+                                        email: email,
+                                      ),
+                                    ),
+                                  );
+                                } else if (position != 0) {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => ProfileDetails(
+                                        list: postList,
+                                        userId: postModel.ownerId,
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
+                              child: CircleAvatar(
+                                radius: 18.0,
+                                child: Image(
+                                  image: AssetImage(userImage),
                                 ),
-                              );
-                            } else if (position != 0) {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => ProfileDetails(
-                                    list: postList,
-                                    userId: postModel.ownerId,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 10.0, right: 10.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  StreamBuilder(
+                                    stream: AuthCrudServices.getInstance()
+                                        .getSpecificData(postModel.ownerId),
+                                    builder: (context, snapshot) {
+                                      if (!snapshot.hasData) {
+                                        return new Text(
+                                          "UnKnown",
+                                          style: TextStyle(
+                                            fontFamily: YuseiMagic,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        );
+                                      }
+                                      var userDocument = snapshot.data;
+                                      userName = userDocument["name"];
+                                      email = userDocument["email"];
+                                      if (userDocument["image"] == "null") {
+                                        userImageProf = userImage;
+                                      } else {
+                                        userImageProf = userDocument["image"];
+                                      }
+                                      return new Text(
+                                        userDocument["name"],
+                                        style: TextStyle(
+                                          fontFamily: YuseiMagic,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      );
+                                    },
                                   ),
+                                  Text(
+                                    postModel.date,
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontFamily: YuseiMagic,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        StreamBuilder(
+                          stream: FollowCrudServices.getInstance()
+                              .getSpecificData(postModel.ownerId),
+                          builder: (context, snapshot) {
+                            var id = snapshot.data;
+                            String currentUser =
+                                AuthCrudServices.getInstance().getUser().uid;
+                            bool res;
+                            try {
+                              res =
+                                  id["id"] == postModel.ownerId ? true : false;
+                            } catch (e) {
+                              res = false;
+                            }
+                            if (snapshot.data == null) {
+                              isfollow = false;
+                            } else if (res == true) {
+                              isfollow = true;
+                            }
+                            if (postModel.ownerId == currentUser) {
+                              return Visibility(
+                                visible: false,
+                                child: Text("null"),
+                              );
+                            } else {
+                              return Text(
+                                isfollow == true ? " Followed " : " ",
+                                style: TextStyle(
+                                  fontFamily: YuseiMagic,
+                                  fontSize: 16.0,
+                                  color: Colors.blue,
                                 ),
                               );
                             }
                           },
-                          child: CircleAvatar(
-                            radius: 18.0,
-                            child: Image(
-                              image: AssetImage(userImage),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                              const EdgeInsets.only(left: 10.0, right: 10.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              StreamBuilder(
-                                stream: AuthCrudServices.getInstance()
-                                    .getSpecificData(postModel.ownerId),
-                                builder: (context, snapshot) {
-                                  if (!snapshot.hasData) {
-                                    return new Text(
-                                      "UnKnown",
-                                      style: TextStyle(
-                                        fontFamily: YuseiMagic,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    );
-                                  }
-                                  var userDocument = snapshot.data;
-                                  userName = userDocument["name"];
-                                  if (userDocument["image"] == "null") {
-                                    userImageProf = userImage;
-                                  } else {
-                                    userImageProf = userDocument["image"];
-                                  }
-                                  return new Text(
-                                    userDocument["name"],
-                                    style: TextStyle(
-                                      fontFamily: YuseiMagic,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  );
-                                },
-                              ),
-                              Text(
-                                postModel.date,
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontFamily: YuseiMagic,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
                         ),
                       ],
-                    ),
-                    StreamBuilder(
-                      stream: FollowCrudServices.getInstance()
-                          .getSpecificData(postModel.ownerId),
-                      builder: (context, snapshot) {
-                        var id = snapshot.data;
-                        String currentUser =
-                            AuthCrudServices.getInstance().getUser().uid;
-                        bool res;
-                        try {
-                          res = id["id"] == postModel.ownerId ? true : false;
-                        } catch (e) {
-                          res = false;
-                        }
-                        if (snapshot.data == null) {
-                          isfollow = false;
-                        } else if (res == true) {
-                          isfollow = true;
-                        }
-                        return StatefulBuilder(
-                          builder: (context, setState) {
-                            return Visibility(
-                              visible: isfollow == true ||
-                                      postModel.ownerId == currentUser
-                                  ? false
-                                  : true,
-                              child: FlatButton(
-                                onPressed: () {
-                                  setState(() {
-                                    addFollowingUser();
-                                    isfollow = true;
-                                  });
-                                },
-                                child: Text(
-                                  "+ Follow",
-                                  style: TextStyle(
-                                    color: Colors.blue,
-                                    fontFamily: YuseiMagic,
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ],
+                    );
+                  },
                 ),
-                SizedBox(
-                  height: height * 0.01,
-                ),
+                SizedBox(height: height * 0.01),
                 Container(
                   width: double.infinity,
                   height: height * 0.09,
@@ -380,22 +375,11 @@ class PostViewApdater extends StatelessWidget {
     }
   }
 
-  void addFollowingUser() async {
-    String ownerId = postModel.ownerId;
-    var result = await FollowCrudServices.getInstance().addData(ownerId);
-    var followerResult =
-        await FollowerCrudServices.getInstance().addData(ownerId);
-    if (result == true || followerResult == true) {
-      print("successfully operation");
-    } else {
-      print("error in operation");
-    }
-  }
-
   // this method is used to share app with your friends
   void _shareApp(BuildContext context) {
     final RenderBox box = context.findRenderObject();
     final String title = postModel.content;
-    Share.share("this content from tchat app >>> : $title", sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+    Share.share("this content from tchat app >>> : $title",
+        sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 }

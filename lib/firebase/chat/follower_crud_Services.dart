@@ -13,12 +13,13 @@ class FollowerCrudServices implements FirebaseModel {
   }
 
   @override
-  Future<bool> addData(model) async{
+  addData(model) async {
     bool result = false;
-    Map<String, dynamic> data = {"id":getUser().uid};
+    Map<String, dynamic> data = {"id": getUser().uid};
     FirebaseFirestore store = FirebaseFirestore.instance;
     CollectionReference collRef = store.collection("Follower");
-    DocumentReference docRef =collRef.doc(model).collection("users").doc(getUser().uid);
+    DocumentReference docRef =
+        collRef.doc(model).collection("users").doc(getUser().uid);
     await docRef.set(data).whenComplete(() {
       result = true;
     }).catchError(
@@ -32,15 +33,24 @@ class FollowerCrudServices implements FirebaseModel {
   }
 
   @override
-  bool deleteData(model) {
-    throw UnimplementedError();
+  deleteData(model) async {
+    var result = false;
+    FirebaseFirestore store = FirebaseFirestore.instance;
+    CollectionReference collRef = store.collection("Follower");
+    DocumentReference docRef =
+        collRef.doc(model).collection("users").doc(getUser().uid);
+    await docRef.delete().whenComplete(() {
+      result = true;
+    }).catchError((onError) => print("the error is $onError"));
+    return result;
   }
 
   @override
   Stream<DocumentSnapshot> getSpecificData(model) {
     FirebaseFirestore store = FirebaseFirestore.instance;
     CollectionReference collRef = store.collection("Follower");
-    DocumentReference docRef = collRef.doc(model).collection("users").doc(model);
+    DocumentReference docRef =
+        collRef.doc(model).collection("users").doc(model);
     return docRef.snapshots();
   }
 
@@ -52,7 +62,8 @@ class FollowerCrudServices implements FirebaseModel {
   @override
   Stream<QuerySnapshot> retrieveAllData(var model) {
     FirebaseFirestore store = FirebaseFirestore.instance;
-    CollectionReference collRef = store.collection("Follower").doc(model).collection("users");
+    CollectionReference collRef =
+        store.collection("Follower").doc(model).collection("users");
     return collRef.snapshots();
   }
 

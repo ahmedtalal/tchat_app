@@ -15,9 +15,9 @@ class ButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: height ,
-      width: width ,
-      child: FlatButton(
+      height: height,
+      width: width,
+      child: ElevatedButton(
         onPressed: onClick,
         child: Text(
           hint,
@@ -27,10 +27,6 @@ class ButtonWidget extends StatelessWidget {
             color: Colors.white,
           ),
         ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.0),
-        ),
-        color: Colors.lightBlue[300],
       ),
     );
   }

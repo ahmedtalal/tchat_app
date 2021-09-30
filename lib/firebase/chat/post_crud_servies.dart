@@ -39,15 +39,16 @@ class PostCrudServices implements FirebaseModel {
   }
 
   @override
-  bool deleteData(model) {
-    bool result = false ;
+  deleteData(model) async {
+    bool result = false;
     FirebaseFirestore store = FirebaseFirestore.instance;
     CollectionReference collRef = store.collection("Posts");
     DocumentReference docRef = collRef.doc(model);
-    docRef.delete().whenComplete((){
-      result = true ;
-    }).catchError((onError)=>print("error in deleting post process $onError"));
-    return result ;
+    await docRef.delete().whenComplete(() {
+      result = true;
+    }).catchError(
+        (onError) => print("error in deleting post process $onError"));
+    return result;
   }
 
   @override
@@ -63,16 +64,18 @@ class PostCrudServices implements FirebaseModel {
   }
 
   @override
-  bool updataData(model) {
-    bool result = false ;
-    PostModel postModel = model as PostModel ;
-    DocumentReference docRef = FirebaseFirestore.instance.collection("Posts").doc(postModel.postId);
-    Map<String,dynamic> data = convertModelToMap(model, "id");
-    docRef.update(data).whenComplete((){
-      result = true ;
+  updataData(model) async {
+    bool result = false;
+    PostModel postModel = model as PostModel;
+    DocumentReference docRef =
+        FirebaseFirestore.instance.collection("Posts").doc(postModel.postId);
+    Map<String, dynamic> data = convertModelToMap(model, "id");
+    await docRef.update(data).whenComplete(() {
+      result = true;
       print(result);
-    }).catchError((onError)=>print("error in updating post process $onError"));
-    return result ;
+    }).catchError(
+        (onError) => print("error in updating post process $onError"));
+    return result;
   }
 
   @override
@@ -81,5 +84,4 @@ class PostCrudServices implements FirebaseModel {
     DocumentReference docRef = store.collection("Posts").doc(model);
     return docRef.snapshots();
   }
-
 }

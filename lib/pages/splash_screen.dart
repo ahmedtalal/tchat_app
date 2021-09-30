@@ -66,7 +66,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   Container(
                     height: height * 0.077,
                     width: width * 0.8,
-                    child: FlatButton(
+                    child: ElevatedButton(
                       onPressed: () {
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (context) => Register(),
@@ -80,10 +80,6 @@ class _SplashScreenState extends State<SplashScreen> {
                           color: Colors.white,
                         ),
                       ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                      color: Colors.blue,
                     ),
                   ),
                   SizedBox(
@@ -101,9 +97,10 @@ class _SplashScreenState extends State<SplashScreen> {
                       ),
                       InkWell(
                         onTap: () {
-                          Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => Login(),
-                        ));
+                          Navigator.of(context)
+                              .pushReplacement(MaterialPageRoute(
+                            builder: (context) => Login(),
+                          ));
                         },
                         child: Text(
                           "Login",
@@ -122,9 +119,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 ],
               ),
             ),
-            SizedBox(
-              height: 40.0,
-            ),
+            const SizedBox(height: 40.0),
           ],
         ),
       ),

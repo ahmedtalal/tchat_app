@@ -24,11 +24,9 @@ class _ChatRoomState extends State<ChatRoom> {
           top: false,
           child: Scaffold(
             key: scaffoldKey,
-            backgroundColor:
-                notifier.darhTheme ? Colors.grey[700] : Colors.grey[400],
             appBar: AppBar(
               toolbarHeight: height * 0.11,
-              elevation: 0,
+              elevation: notifier.darhTheme ? 2 : 0.7,
               automaticallyImplyLeading: false,
               backgroundColor:
                   notifier.darhTheme ? Colors.grey[850] : Colors.white,
@@ -100,8 +98,10 @@ class _ChatRoomState extends State<ChatRoom> {
                     color: Colors.grey[500],
                   ),
                   onPressed: () {
-                    scaffoldKey.currentState.showSnackBar(
-                      SnackBar(content: Text("Sorry,It is not activated now!")),
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("sorry,it is not activated now!"),
+                      ),
                     );
                   },
                 ),
@@ -112,8 +112,10 @@ class _ChatRoomState extends State<ChatRoom> {
                     color: Colors.grey[500],
                   ),
                   onPressed: () {
-                    scaffoldKey.currentState.showSnackBar(
-                      SnackBar(content: Text("Sorry,It is not activated now!")),
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("it is not activated now!"),
+                      ),
                     );
                   },
                 ),
@@ -130,7 +132,9 @@ class _ChatRoomState extends State<ChatRoom> {
                     padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
                     height: height * 0.08,
                     width: double.infinity,
-                    color: notifier.darhTheme ? Colors.grey[850] : Colors.white,
+                    color: notifier.darhTheme
+                        ? Colors.grey[850]
+                        : Colors.grey[100],
                     child: Row(
                       children: <Widget>[
                         GestureDetector(
@@ -168,7 +172,7 @@ class _ChatRoomState extends State<ChatRoom> {
                             ),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 15,
                         ),
                         FloatingActionButton(

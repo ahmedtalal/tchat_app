@@ -20,7 +20,7 @@ class ErrorsWidget extends StatelessWidget {
         child: Column(
           children: [
             Image(
-              image: AssetImage(noWifi),
+              image: AssetImage(emptySearch),
               height: 150.0,
             ),
             Text(

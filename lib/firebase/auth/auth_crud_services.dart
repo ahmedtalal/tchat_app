@@ -14,7 +14,7 @@ class AuthCrudServices implements FirebaseModel {
   }
 
   @override
-  Future<bool> addData(model) async {
+  addData(model) async {
     bool result = false;
     UserModel userModel = model as UserModel;
     FirebaseFirestore store = FirebaseFirestore.instance;
@@ -45,7 +45,8 @@ class AuthCrudServices implements FirebaseModel {
 
   @override
   Stream<QuerySnapshot> retrieveAllData(var model) {
-    CollectionReference collRef = FirebaseFirestore.instance.collection("Users");
+    CollectionReference collRef =
+        FirebaseFirestore.instance.collection("Users");
     return collRef.snapshots();
   }
 

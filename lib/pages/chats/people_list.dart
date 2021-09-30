@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:tchat/constants.dart';
 import 'package:tchat/firebase/auth/auth_crud_services.dart';
 import 'package:tchat/models/user_model.dart';
+import 'package:tchat/pages/search_page.dart';
 import 'package:tchat/widgets/error_widget.dart';
-import 'package:tchat/widgets/search_widget.dart';
 import 'package:tchat/widgets/user_view_adapter.dart';
 
 class PeopleList extends StatefulWidget {
@@ -28,38 +28,52 @@ class _PeopleListState extends State<PeopleList> {
               left: width * 0.04,
               right: width * 0.04,
             ),
-            child: Column(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    InkWell(
-                      onTap: () => Navigator.of(context).pop(context),
-                      child: Icon(
-                        Icons.arrow_back_ios,
-                        size: 22.0,
-                        color: Colors.blue,
-                      ),
+                    StreamBuilder(
+                      stream: AuthCrudServices.getInstance().getSpecificData(
+                          AuthCrudServices.getInstance().getUser().uid),
+                      builder: (context, snapshot) {
+                        String image;
+                        var document = snapshot.data;
+                        if (!snapshot.hasData || document["image"] == "null") {
+                          image = userImage;
+                        } else {
+                          print("object");
+                          image = document["image"];
+                        }
+                        return CircleAvatar(
+                          radius: 15.0,
+                          child: Image(
+                            image: AssetImage(image),
+                          ),
+                        );
+                      },
                     ),
+                    const SizedBox(width: 10.0),
                     Text(
-                      "People",
+                      "Users",
                       style: TextStyle(
-                        fontSize: 18.0,
+                        fontSize: 16.0,
                         fontFamily: YuseiMagic,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: height * 0.02,
-                ),
-                SearchWidget(
-                  onClick: (value) {
-                    setState(() {});
-                  },
-                  heightValue: height * 0.066,
-                  hint: "Search",
+                InkWell(
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => SearchPage(type: "users"),
+                  )),
+                  child: Icon(
+                    Icons.search,
+                    size: 22.0,
+                    color: Colors.blue,
+                  ),
                 ),
               ],
             ),

@@ -3,7 +3,7 @@ import 'package:tchat/constants.dart';
 import 'package:tchat/pages/bottom_navigationbar/chats.dart';
 import 'package:tchat/pages/bottom_navigationbar/posts.dart';
 import 'package:tchat/pages/bottom_navigationbar/settings.dart';
-import 'package:tchat/pages/bottom_navigationbar/status.dart';
+import 'package:tchat/pages/chats/people_list.dart';
 
 class NavBar extends StatefulWidget {
   @override
@@ -15,7 +15,7 @@ class _NavBarState extends State<NavBar> {
   List<Widget> widgets = [
     Chats(),
     Posts(),
-    Status(),
+    PeopleList(),
     Settings(),
   ];
 
@@ -38,23 +38,55 @@ class _NavBarState extends State<NavBar> {
         currentIndex: selectedIndex,
         items: [
           BottomNavigationBarItem(
-            icon: Image.asset(chatImage,color: Colors.grey,height: 20.0,),
-            activeIcon: Image.asset(chatImage,color: Colors.blue,height: 20.0,),
+            icon: Image.asset(
+              chatImage,
+              color: Colors.grey,
+              height: 20.0,
+            ),
+            activeIcon: Image.asset(
+              chatImage,
+              color: Colors.blue,
+              height: 20.0,
+            ),
             label: "Chats",
           ),
           BottomNavigationBarItem(
-            icon: Image.asset(postImage,color: Colors.grey,height: 20.0,),
-            activeIcon: Image.asset(postImage,color: Colors.blue,height: 20.0,),
+            icon: Image.asset(
+              postImage,
+              color: Colors.grey,
+              height: 20.0,
+            ),
+            activeIcon: Image.asset(
+              postImage,
+              color: Colors.blue,
+              height: 20.0,
+            ),
             label: "Posts",
           ),
           BottomNavigationBarItem(
-            icon: Image.asset(statusImage,color: Colors.grey,height: 20.0,),
-            activeIcon: Image.asset(statusImage,color: Colors.blue,height: 20.0,),
-            label: "Status",
+            icon: Image.asset(
+              users,
+              color: Colors.grey,
+              height: 20.0,
+            ),
+            activeIcon: Image.asset(
+              users,
+              color: Colors.blue,
+              height: 20.0,
+            ),
+            label: "Users",
           ),
           BottomNavigationBarItem(
-            icon: Image.asset(settingImage,color: Colors.grey,height: 20.0,),
-            activeIcon: Image.asset(settingImage,color: Colors.blue,height: 20.0,),
+            icon: Image.asset(
+              settingImage,
+              color: Colors.grey,
+              height: 20.0,
+            ),
+            activeIcon: Image.asset(
+              settingImage,
+              color: Colors.blue,
+              height: 20.0,
+            ),
             label: "Settings",
           ),
         ],

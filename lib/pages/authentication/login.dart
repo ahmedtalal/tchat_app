@@ -78,6 +78,7 @@ class _LoginState extends State<Login> {
                       ],
                     ),
                   ),
+                  const SizedBox(height: 10),
                   Container(
                     width: double.infinity,
                     child: Padding(
@@ -158,7 +159,7 @@ class _LoginState extends State<Login> {
   void creareSnackbar(String message) {
     setState(() {
       isProgress = !isProgress;
-      scafolldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(message),
         ),

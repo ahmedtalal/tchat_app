@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tchat/constants.dart';
-import 'package:tchat/firebase/auth/auth_crud_services.dart';
 import 'package:tchat/firebase/chat/follow_crud_Services.dart';
 import 'package:tchat/firebase/chat/follower_crud_Services.dart';
 import 'package:tchat/models/post_model.dart';
@@ -15,11 +14,12 @@ class UserProfile extends StatefulWidget {
   String userId;
   List<PostModel> posts;
   String userName;
-  UserProfile({
-    @required this.userId,
-    @required this.posts,
-    @required this.userName,
-  });
+  String email;
+  UserProfile(
+      {@required this.userId,
+      @required this.posts,
+      @required this.userName,
+      @required this.email});
   @override
   _UserProfileState createState() => _UserProfileState();
 }
@@ -72,24 +72,6 @@ class _UserProfileState extends State<UserProfile> {
                     color: notifier.darhTheme ? Colors.white : Colors.black,
                   ),
                 ),
-                actions: [
-                  Visibility(
-                    visible: widget.userId ==
-                            AuthCrudServices.getInstance().getUser().uid
-                        ? false
-                        : true,
-                    child: IconButton(
-                      icon: Image.asset(
-                        followImage,
-                        color: Colors.blue,
-                        height: 20.0,
-                      ),
-                      onPressed: () {
-                        setState(() {});
-                      },
-                    ),
-                  )
-                ],
                 bottom: TabBar(
                   unselectedLabelColor: Colors.black,
                   indicatorSize: TabBarIndicatorSize.label,

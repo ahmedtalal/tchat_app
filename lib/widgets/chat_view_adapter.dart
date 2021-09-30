@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tchat/constants.dart';
 import 'package:tchat/models/user_model.dart';
+import 'package:tchat/pages/chats/chat_room.dart';
 
 // ignore: must_be_immutable
 class ChatViewAdapter extends StatelessWidget {

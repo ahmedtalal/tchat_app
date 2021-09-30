@@ -151,7 +151,7 @@ class _RegisterState extends State<Register> {
   void creareSnackbar(String message) {
     setState(() {
       isProgress = !isProgress;
-      scafolldKey.currentState.showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(message),
         ),
